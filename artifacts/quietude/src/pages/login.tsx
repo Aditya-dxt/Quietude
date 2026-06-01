@@ -43,7 +43,7 @@ export default function Login() {
         setLocation("/feed");
       },
       onError: (error) => {
-        toast.error(error.error || "Failed to log in.");
+        toast.error((error as { error?: string })?.error || "Failed to log in.");
       }
     });
   };

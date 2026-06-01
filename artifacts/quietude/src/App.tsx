@@ -13,6 +13,7 @@ import Feed from "@/pages/feed";
 import Explore from "@/pages/explore";
 import Compose from "@/pages/compose";
 import Profile from "@/pages/profile";
+import PostDetail from "@/pages/PostDetail";
 import MessagesList from "@/pages/messages-list";
 import MessageThread from "@/pages/message-thread";
 import Settings from "@/pages/settings";
@@ -57,6 +58,7 @@ function Router() {
       <Route path="/feed" component={() => <ProtectedRoute component={() => <AppLayout><Feed /></AppLayout>} />} />
       <Route path="/explore" component={() => <ProtectedRoute component={() => <AppLayout><Explore /></AppLayout>} />} />
       <Route path="/post/new" component={() => <ProtectedRoute component={() => <AppLayout><Compose /></AppLayout>} />} />
+      <Route path="/post/:id" component={() => <ProtectedRoute component={() => <AppLayout><PostDetail /></AppLayout>} />} />
       <Route path="/u/:handle" component={() => <ProtectedRoute component={() => <AppLayout><Profile /></AppLayout>} />} />
       <Route path="/messages" component={() => <ProtectedRoute component={() => <AppLayout><MessagesList /></AppLayout>} />} />
       <Route path="/messages/:handle" component={() => <ProtectedRoute component={() => <AppLayout><MessageThread /></AppLayout>} />} />

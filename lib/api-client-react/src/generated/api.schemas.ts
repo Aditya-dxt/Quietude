@@ -120,6 +120,24 @@ export interface Conversation {
   unreadCount?: number;
 }
 
+export interface Reply {
+  id: number;
+  postId: number;
+  content: string;
+  authorUsername: string;
+  /** @nullable */
+  authorDisplayName: string | null;
+  createdAt: string;
+}
+
+export interface ReplyInput {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  content: string;
+}
+
 export type GetFeedParams = {
 /**
  * @nullable

@@ -34,6 +34,8 @@ import type {
   PostInput,
   ProfileUpdate,
   RegisterInput,
+  Reply,
+  ReplyInput,
   SuccessResponse,
   User,
   UserProfile
@@ -1019,6 +1021,155 @@ export const useDeletePost = <TError = ErrorType<ErrorResponse>,
         TContext
       > => {
       return useMutation(getDeletePostMutationOptions(options));
+    }
+
+export const getListRepliesUrl = (id: number,) => {
+
+
+
+
+  return `/api/posts/${id}/replies`
+}
+
+/**
+ * @summary Get replies for a post (chronological)
+ */
+export const listReplies = async (id: number, options?: RequestInit): Promise<Reply[]> => {
+
+  return customFetch<Reply[]>(getListRepliesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListRepliesQueryKey = (id: number,) => {
+    return [
+    `/api/posts/${id}/replies`
+    ] as const;
+    }
+
+
+export const getListRepliesQueryOptions = <TData = Awaited<ReturnType<typeof listReplies>>, TError = ErrorType<ErrorResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listReplies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListRepliesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listReplies>>> = ({ signal }) => listReplies(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listReplies>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListRepliesQueryResult = NonNullable<Awaited<ReturnType<typeof listReplies>>>
+export type ListRepliesQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get replies for a post (chronological)
+ */
+
+export function useListReplies<TData = Awaited<ReturnType<typeof listReplies>>, TError = ErrorType<ErrorResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listReplies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListRepliesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateReplyUrl = (id: number,) => {
+
+
+
+
+  return `/api/posts/${id}/replies`
+}
+
+/**
+ * @summary Reply to a post
+ */
+export const createReply = async (id: number,
+    replyInput: ReplyInput, options?: RequestInit): Promise<Reply> => {
+
+  return customFetch<Reply>(getCreateReplyUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replyInput,)
+  }
+);}
+
+
+
+
+export const getCreateReplyMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReply>>, TError,{id: number;data: BodyType<ReplyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createReply>>, TError,{id: number;data: BodyType<ReplyInput>}, TContext> => {
+
+const mutationKey = ['createReply'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createReply>>, {id: number;data: BodyType<ReplyInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createReply(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateReplyMutationResult = NonNullable<Awaited<ReturnType<typeof createReply>>>
+    export type CreateReplyMutationBody = BodyType<ReplyInput>
+    export type CreateReplyMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Reply to a post
+ */
+export const useCreateReply = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createReply>>, TError,{id: number;data: BodyType<ReplyInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createReply>>,
+        TError,
+        {id: number;data: BodyType<ReplyInput>},
+        TContext
+      > => {
+      return useMutation(getCreateReplyMutationOptions(options));
     }
 
 export const getListUserPostsUrl = (handle: string,) => {

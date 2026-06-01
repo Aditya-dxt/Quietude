@@ -1,4 +1,4 @@
-import { useGetUserProfile, useListUserPosts, useFollowUser, useUnfollowUser, getGetUserProfileQueryKey, getGetFeedQueryKey, getGetFollowingQueryKey } from "@workspace/api-client-react";
+import { useGetUserProfile, useListUserPosts, useFollowUser, useUnfollowUser, getGetUserProfileQueryKey, getGetFeedQueryKey, getGetFollowingQueryKey, getListUserPostsQueryKey } from "@workspace/api-client-react";
 import { PostCard } from "@/components/post-card";
 import { Button } from "@/components/ui/button";
 import { useParams } from "wouter";
@@ -14,11 +14,11 @@ export default function Profile() {
   const queryClient = useQueryClient();
   
   const { data: profile, isLoading: profileLoading, isError: profileError } = useGetUserProfile(handle || "", { 
-    query: { enabled: !!handle } 
+    query: { queryKey: getGetUserProfileQueryKey(handle || ""), enabled: !!handle } 
   });
   
   const { data: postsData, isLoading: postsLoading } = useListUserPosts(handle || "", { 
-    query: { enabled: !!handle } 
+    query: { queryKey: getListUserPostsQueryKey(handle || ""), enabled: !!handle } 
   });
 
   const followMutation = useFollowUser();

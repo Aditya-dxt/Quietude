@@ -20,6 +20,8 @@ export * from './post';
 export * from './postInput';
 export * from './profileUpdate';
 export * from './registerInput';
+export * from './reply';
+export * from './replyInput';
 export * from './successResponse';
 export * from './user';
 export * from './userProfile';

@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
-import type { Post } from "@workspace/api-client-react/src/generated/api.schemas";
+import type { Post } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Trash2 } from "lucide-react";
 import { useDeletePost, getGetFeedQueryKey, getGetExploreFeedQueryKey, getListUserPostsQueryKey } from "@workspace/api-client-react";
@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 
-export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInvalidate?: any[] }) {
+export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInvalidate?: readonly unknown[] }) {
   const { user } = useAuth();
   const isOwn = user?.username === post.authorUsername;
   const deleteMutation = useDeletePost();
@@ -73,6 +73,12 @@ export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInval
            </span>
         </div>
       )}
+      
+      <div className="pl-13 mt-4 flex items-center justify-end">
+        <Link href={`/post/${post.id}`} className="text-xs text-muted-foreground italic hover:text-foreground transition-colors">
+          Read thread →
+        </Link>
+      </div>
     </article>
   );
 }

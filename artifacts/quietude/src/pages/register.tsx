@@ -48,7 +48,7 @@ export default function Register() {
         setLocation("/feed");
       },
       onError: (error) => {
-        toast.error(error.error || "Failed to create account.");
+        toast.error((error as { error?: string })?.error || "Failed to create account.");
       }
     });
   };

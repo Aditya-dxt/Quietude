@@ -1,4 +1,4 @@
-import { useListMessages, useSendMessage, useGetUserProfile, getListMessagesQueryKey, getGetConversationsQueryKey } from "@workspace/api-client-react";
+import { useListMessages, useSendMessage, useGetUserProfile, getGetUserProfileQueryKey, getListMessagesQueryKey, getGetConversationsQueryKey } from "@workspace/api-client-react";
 import { useParams } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
@@ -24,11 +24,11 @@ export default function MessageThread() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: profile } = useGetUserProfile(handle || "", { 
-    query: { enabled: !!handle } 
+    query: { queryKey: getGetUserProfileQueryKey(handle || ""), enabled: !!handle } 
   });
   
   const { data: messages, isLoading } = useListMessages(handle || "", { 
-    query: { enabled: !!handle, refetchInterval: 10000 } // Poll every 10s
+    query: { queryKey: getListMessagesQueryKey(handle || ""), enabled: !!handle, refetchInterval: 10000 } // Poll every 10s
   });
 
   const sendMutation = useSendMessage();

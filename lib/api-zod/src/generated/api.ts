@@ -203,6 +203,40 @@ export const DeletePostResponse = zod.object({
 
 
 /**
+ * @summary Get replies for a post (chronological)
+ */
+export const ListRepliesParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListRepliesResponseItem = zod.object({
+  "id": zod.number(),
+  "postId": zod.number(),
+  "content": zod.string(),
+  "authorUsername": zod.string(),
+  "authorDisplayName": zod.string().nullable(),
+  "createdAt": zod.string()
+})
+export const ListRepliesResponse = zod.array(ListRepliesResponseItem)
+
+
+/**
+ * @summary Reply to a post
+ */
+export const CreateReplyParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const createReplyBodyContentMax = 2000;
+
+
+
+export const CreateReplyBody = zod.object({
+  "content": zod.string().min(1).max(createReplyBodyContentMax)
+})
+
+
+/**
  * @summary Get posts by a specific user
  */
 export const ListUserPostsParams = zod.object({

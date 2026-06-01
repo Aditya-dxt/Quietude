@@ -33,7 +33,7 @@ export default function Compose() {
         setLocation("/feed");
       },
       onError: (error) => {
-        toast.error(error.error || "Failed to save post.");
+        toast.error((error as { error?: string })?.error || "Failed to save post.");
       }
     });
   };

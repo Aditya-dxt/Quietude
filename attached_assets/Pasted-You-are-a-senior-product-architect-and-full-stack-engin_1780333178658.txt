@@ -1,0 +1,92 @@
+You are a senior product architect and full-stack engineer. I want to build 
+a privacy-focused social network called **"Quietude"** (or suggest a better name).
+
+---
+
+## CONCEPT
+
+A social space where people share thoughts, writing, and media — but with 
+zero algorithmic manipulation. No engagement metrics. No comparisons. 
+No anxiety loops. Just calm, intentional connection.
+
+Core philosophy:
+- Chronological feed only — no ranking, no boosting
+- No public like counts, follower counts, or view counts
+- No "trending" or "viral" mechanics
+- No data selling, no ad targeting
+- Posts disappear after 30 days by default (optional permanence)
+- Anonymous-first: display names optional, real names never required
+
+---
+
+## WHAT I NEED FROM YOU
+
+### 1. Product Design Document
+- Define the core user flows (sign up → post → connect → read)
+- List features for MVP vs V2
+- Identify what you intentionally *remove* from typical social networks 
+  and *why* it matters for mental health
+
+### 2. Tech Stack Recommendation
+- Recommend a privacy-first full-stack architecture
+- Consider: end-to-end encryption for DMs, self-hostable option, 
+  GDPR/data minimization, no third-party analytics
+- Should be buildable by a solo dev or small team (MERN or similar)
+- Explain trade-offs of your choices
+
+### 3. Database Schema (MongoDB or PostgreSQL)
+- Users, Posts, Connections, DMs
+- Ephemeral post logic (TTL / scheduled deletion)
+- Privacy settings per-post and per-user
+
+### 4. API Design
+- RESTful or GraphQL — justify your choice
+- Core endpoints: auth, posts CRUD, feed (chronological), 
+  follow/connect, DM, delete account (full data wipe)
+- Include rate limiting and abuse prevention strategy
+
+### 5. Frontend Architecture
+- React-based, component breakdown
+- UI philosophy: calm, minimal, no red notification badges, 
+  soft interactions, no dark patterns
+- Suggest a design system / color language that reduces anxiety 
+  (think: warm neutrals, generous whitespace, no infinite scroll)
+
+### 6. Privacy & Security Checklist
+- Auth strategy (JWT + refresh tokens / sessions)
+- Data minimization practices
+- How to handle account deletion thoroughly
+- How to prevent scraping and bot abuse without invasive CAPTCHAs
+
+### 7. Monetization Without Surveillance
+- Suggest 2–3 ethical revenue models (e.g., optional subscriptions, 
+  one-time purchases, donations)
+- What to explicitly *never* do (and why)
+
+---
+
+## CONSTRAINTS
+
+- I'm a first-year CS student with strong MERN stack skills
+- I want to build the MVP solo in ~6–8 weeks
+- Deployment: Vercel (frontend) + Render (backend) + MongoDB Atlas
+- Budget: near zero for MVP (free tiers)
+- I want real, buildable code — not theory
+
+---
+
+## OUTPUT FORMAT
+
+Structure your response as:
+1. Product Vision (2–3 paragraphs)
+2. Feature List (MVP | V2 | Never-build)
+3. Tech Stack with justification
+4. DB Schema (code blocks)
+5. API Route Map (table format)
+6. Frontend Component Tree
+7. Privacy Checklist
+8. Monetization Options
+9. Week-by-week 8-week build plan
+
+Be opinionated. Make bold calls. I want a product that actually 
+stands for something — not just "another social app."

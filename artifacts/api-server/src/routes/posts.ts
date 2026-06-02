@@ -83,7 +83,7 @@ router.get("/posts/feed", async (req, res): Promise<void> => {
   }
 
   const conditions = [inArray(postsTable.authorId, followingIds), notExpired()];
-  if (cursor) {
+  if (cursor && cursor !== "null") {
     const cursorDate = new Date(cursor);
     conditions.push(lt(postsTable.createdAt, cursorDate));
   }
@@ -111,7 +111,7 @@ router.get("/posts/explore", async (req, res): Promise<void> => {
   const cursor = req.query.cursor as string | undefined;
 
   const conditions = [notExpired()];
-  if (cursor) {
+  if (cursor && cursor !== "null") {
     const cursorDate = new Date(cursor);
     conditions.push(lt(postsTable.createdAt, cursorDate));
   }
@@ -153,7 +153,7 @@ router.get("/posts/user/:handle", async (req, res): Promise<void> => {
   const cursor = req.query.cursor as string | undefined;
 
   const conditions = [eq(postsTable.authorId, author.id), notExpired()];
-  if (cursor) {
+  if (cursor && cursor !== "null") {
     conditions.push(lt(postsTable.createdAt, new Date(cursor)));
   }
 

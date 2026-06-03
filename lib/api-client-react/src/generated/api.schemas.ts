@@ -5,6 +5,10 @@
  * Quietude API - privacy-first social network
  * OpenAPI spec version: 0.1.0
  */
+export interface UploadInput {
+  image?: Blob;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -151,10 +155,6 @@ export type SearchUsersParams = {
  * @minLength 2
  */
 q: string;
-};
-
-export type UploadImageBody = {
-  image?: Blob;
 };
 
 export type UploadImage200 = {

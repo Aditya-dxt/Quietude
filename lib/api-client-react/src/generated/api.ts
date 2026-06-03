@@ -39,7 +39,7 @@ import type {
   SearchUsersParams,
   SuccessResponse,
   UploadImage200,
-  UploadImageBody,
+  UploadInput,
   User,
   UserProfile
 } from './api.schemas';
@@ -587,10 +587,10 @@ export const getUploadImageUrl = () => {
 /**
  * @summary Upload an image
  */
-export const uploadImage = async (uploadImageBody: UploadImageBody, options?: RequestInit): Promise<UploadImage200> => {
+export const uploadImage = async (uploadInput: UploadInput, options?: RequestInit): Promise<UploadImage200> => {
     const formData = new FormData();
-if(uploadImageBody.image !== undefined) {
- formData.append(`image`, uploadImageBody.image);
+if(uploadInput.image !== undefined) {
+ formData.append(`image`, uploadInput.image);
  }
 
   return customFetch<UploadImage200>(getUploadImageUrl(),
@@ -607,8 +607,8 @@ if(uploadImageBody.image !== undefined) {
 
 
 export const getUploadImageMutationOptions = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadImageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadImageBody>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadInput>}, TContext> => {
 
 const mutationKey = ['uploadImage'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -620,7 +620,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadImage>>, {data: BodyType<UploadImageBody>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadImage>>, {data: BodyType<UploadInput>}> = (props) => {
           const {data} = props ?? {};
 
           return  uploadImage(data,requestOptions)
@@ -634,18 +634,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type UploadImageMutationResult = NonNullable<Awaited<ReturnType<typeof uploadImage>>>
-    export type UploadImageMutationBody = BodyType<UploadImageBody>
+    export type UploadImageMutationBody = BodyType<UploadInput>
     export type UploadImageMutationError = ErrorType<ErrorResponse>
 
     /**
  * @summary Upload an image
  */
 export const useUploadImage = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadImageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadImage>>, TError,{data: BodyType<UploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof uploadImage>>,
         TError,
-        {data: BodyType<UploadImageBody>},
+        {data: BodyType<UploadInput>},
         TContext
       > => {
       return useMutation(getUploadImageMutationOptions(options));

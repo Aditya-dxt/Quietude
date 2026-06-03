@@ -25,6 +25,6 @@ export * from './replyInput';
 export * from './searchUsersParams';
 export * from './successResponse';
 export * from './uploadImage200';
-export * from './uploadImageBody';
+export * from './uploadInput';
 export * from './user';
 export * from './userProfile';

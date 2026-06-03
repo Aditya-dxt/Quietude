@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import { useSearchUsers } from "@workspace/api-client-react";
+import { getSearchUsersQueryOptions } from "@workspace/api-client-react";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -14,10 +15,10 @@ export default function SearchPage() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  const { data: users, isLoading } = useSearchUsers(
-    { q: debouncedQuery },
-    { query: { enabled: debouncedQuery.length >= 2 } }
-  );
+  const { data: users, isLoading } = useQuery({
+    ...getSearchUsersQueryOptions({ q: debouncedQuery }),
+    enabled: debouncedQuery.length >= 2,
+  });
 
   return (
     <div className="flex flex-col min-h-[100dvh]">

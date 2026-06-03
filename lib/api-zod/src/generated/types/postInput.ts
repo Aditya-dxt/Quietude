@@ -13,4 +13,7 @@ export interface PostInput {
      */
   content: string;
   isPermanent?: boolean;
+  imageUrl?: string;
+  isSensitive?: boolean;
+  contentWarning?: string;
 }

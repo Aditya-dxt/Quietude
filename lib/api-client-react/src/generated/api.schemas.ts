@@ -78,6 +78,11 @@ export interface Post {
   /** @nullable */
   expiresAt: string | null;
   isPermanent: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
+  isSensitive?: boolean;
+  /** @nullable */
+  contentWarning?: string | null;
 }
 
 export interface PostInput {
@@ -87,6 +92,9 @@ export interface PostInput {
      */
   content: string;
   isPermanent?: boolean;
+  imageUrl?: string;
+  isSensitive?: boolean;
+  contentWarning?: string;
 }
 
 export interface FeedResult {
@@ -137,6 +145,23 @@ export interface ReplyInput {
      */
   content: string;
 }
+
+export type SearchUsersParams = {
+/**
+ * @minLength 2
+ */
+q: string;
+};
+
+export type UploadImageBody = {
+  image?: Blob;
+};
+
+export type UploadImage200 = {
+  url?: string;
+  width?: number;
+  height?: number;
+};
 
 export type GetFeedParams = {
 /**

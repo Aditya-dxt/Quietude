@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@workspace/api-client-react";
-import { LogOut, Home, Compass, MessageCircle, User, Settings, PenSquare } from "lucide-react";
+import { LogOut, Home, Compass, MessageCircle, User, Settings, PenSquare, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -24,6 +24,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/feed", icon: Home, label: "Home" },
     { href: "/explore", icon: Compass, label: "Explore" },
+    { href: "/search", icon: Search, label: "Search" },
     { href: "/messages", icon: MessageCircle, label: "Messages" },
     { href: `/u/${user.username}`, icon: User, label: "Profile" },
     { href: "/settings", icon: Settings, label: "Settings" },

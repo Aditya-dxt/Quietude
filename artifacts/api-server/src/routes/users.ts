@@ -1,6 +1,6 @@
 import { Router, type IRouter, type Request } from "express";
 import { db, usersTable, connectionsTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ilike, or } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { UpdateProfileBody } from "@workspace/api-zod";
 import { getSessionUserId } from "../lib/session";
@@ -8,6 +8,40 @@ import { getSessionUserId } from "../lib/session";
 const router: IRouter = Router();
 
 type AuthRequest = Request & { user: typeof usersTable.$inferSelect };
+
+router.get("/users/search", requireAuth, async (req, res): Promise<void> => {
+  const query = req.query.q as string;
+  if (!query || query.length < 2) {
+    res.json([]);
+    return;
+  }
+
+  const searchTerm = `%${query}%`;
+  const users = await db
+    .select({
+      id: usersTable.id,
+      username: usersTable.username,
+      displayName: usersTable.displayName,
+      bio: usersTable.bio,
+      createdAt: usersTable.createdAt,
+    })
+    .from(usersTable)
+    .where(
+      or(
+        ilike(usersTable.username, searchTerm),
+        ilike(usersTable.displayName, searchTerm)
+      )
+    )
+    .limit(20);
+
+  res.json(users.map(u => ({
+    id: u.id,
+    username: u.username,
+    displayName: u.displayName,
+    bio: u.bio,
+    createdAt: u.createdAt.toISOString()
+  })));
+});
 
 router.get("/users/:handle", async (req, res): Promise<void> => {
   const handle = Array.isArray(req.params.handle)

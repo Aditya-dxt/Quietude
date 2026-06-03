@@ -17,6 +17,7 @@ import PostDetail from "@/pages/PostDetail";
 import MessagesList from "@/pages/messages-list";
 import MessageThread from "@/pages/message-thread";
 import Settings from "@/pages/settings";
+import Search from "@/pages/search";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ function Router() {
       
       <Route path="/feed" component={() => <ProtectedRoute component={() => <AppLayout><Feed /></AppLayout>} />} />
       <Route path="/explore" component={() => <ProtectedRoute component={() => <AppLayout><Explore /></AppLayout>} />} />
+      <Route path="/search" component={() => <ProtectedRoute component={() => <AppLayout><Search /></AppLayout>} />} />
       <Route path="/post/new" component={() => <ProtectedRoute component={() => <AppLayout><Compose /></AppLayout>} />} />
       <Route path="/post/:id" component={() => <ProtectedRoute component={() => <AppLayout><PostDetail /></AppLayout>} />} />
       <Route path="/u/:handle" component={() => <ProtectedRoute component={() => <AppLayout><Profile /></AppLayout>} />} />

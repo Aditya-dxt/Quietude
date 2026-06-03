@@ -6,6 +6,7 @@ import postsRouter from "./posts";
 import repliesRouter from "./replies";
 import connectionsRouter from "./connections";
 import messagesRouter from "./messages";
+import uploadRouter from "./upload";
 
 const router: IRouter = Router();
 
@@ -16,5 +17,6 @@ router.use(postsRouter);
 router.use(repliesRouter);
 router.use(connectionsRouter);
 router.use(messagesRouter);
+router.use(uploadRouter);
 
 export default router;

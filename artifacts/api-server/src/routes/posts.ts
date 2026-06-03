@@ -24,6 +24,9 @@ function serializePost(
     createdAt: post.createdAt.toISOString(),
     expiresAt: post.expiresAt ? post.expiresAt.toISOString() : null,
     isPermanent: post.isPermanent,
+    imageUrl: post.imageUrl ?? null,
+    isSensitive: post.isSensitive,
+    contentWarning: post.contentWarning ?? null,
   };
 }
 
@@ -40,7 +43,7 @@ router.post("/posts", requireAuth, async (req, res): Promise<void> => {
     return;
   }
 
-  const { content, isPermanent } = parsed.data;
+  const { content, isPermanent, imageUrl, isSensitive, contentWarning } = parsed.data;
   const expiresAt =
     isPermanent
       ? null
@@ -53,6 +56,9 @@ router.post("/posts", requireAuth, async (req, res): Promise<void> => {
       content,
       isPermanent: isPermanent ?? false,
       expiresAt,
+      imageUrl: imageUrl ?? null,
+      isSensitive: isSensitive ?? false,
+      contentWarning: contentWarning ?? null,
     })
     .returning();
 

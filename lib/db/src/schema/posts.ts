@@ -9,6 +9,9 @@ export const postsTable = pgTable("posts", {
   isPermanent: boolean("is_permanent").notNull().default(false),
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  imageUrl: text("image_url"),
+  isSensitive: boolean("is_sensitive").notNull().default(false),
+  contentWarning: text("content_warning"),
 });
 
 export const insertPostSchema = createInsertSchema(postsTable).omit({

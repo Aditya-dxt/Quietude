@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import { useState } from "react";
 import type { Post } from "@workspace/api-client-react";
 import { Link } from "wouter";
 import { Trash2 } from "lucide-react";
@@ -13,6 +14,13 @@ export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInval
   const isOwn = user?.username === post.authorUsername;
   const deleteMutation = useDeletePost();
   const queryClient = useQueryClient();
+  const [isRevealed, setIsRevealed] = useState(!post.isSensitive);
+
+  const toggleReveal = () => {
+    if (post.isSensitive && !isRevealed) {
+      setIsRevealed(true);
+    }
+  };
 
   const handleDelete = () => {
     deleteMutation.mutate({ id: post.id }, {
@@ -62,8 +70,31 @@ export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInval
         </div>
       </div>
       
-      <div className="pl-13 text-foreground whitespace-pre-wrap font-serif text-lg leading-relaxed text-pretty">
-        {post.content}
+      <div 
+        className={`pl-13 mt-3 relative ${post.isSensitive && !isRevealed ? "cursor-pointer" : ""}`}
+        onClick={post.isSensitive && !isRevealed ? toggleReveal : undefined}
+      >
+        <div className={`transition-all duration-300 ${post.isSensitive && !isRevealed ? "filter blur-md select-none" : ""}`}>
+          <div className="text-foreground whitespace-pre-wrap font-serif text-lg leading-relaxed text-pretty">
+            {post.content}
+          </div>
+          {post.imageUrl && (
+            <div className="mt-3 overflow-hidden rounded-xl">
+              <img src={post.imageUrl} alt="Post image" className="max-h-[400px] w-auto object-cover" loading="lazy" />
+            </div>
+          )}
+        </div>
+        
+        {post.isSensitive && !isRevealed && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/5 z-10 rounded-xl">
+            <div className="bg-background/80 backdrop-blur-md px-4 py-2 rounded-full border border-border shadow-sm flex flex-col items-center text-center">
+               <span className="font-medium text-sm text-foreground">
+                 {post.contentWarning ? `Sensitive Content: ${post.contentWarning}` : "Sensitive Content"}
+               </span>
+               <span className="text-xs text-muted-foreground mt-0.5">Tap to view</span>
+            </div>
+          </div>
+        )}
       </div>
       
       {!post.isPermanent && post.expiresAt && (

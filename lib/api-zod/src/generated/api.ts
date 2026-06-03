@@ -82,6 +82,41 @@ export const DeleteAccountResponse = zod.object({
 
 
 /**
+ * @summary Search for users by username or display name
+ */
+export const searchUsersQueryQMin = 2;
+
+
+
+export const SearchUsersQueryParams = zod.object({
+  "q": zod.coerce.string().min(searchUsersQueryQMin)
+})
+
+export const SearchUsersResponseItem = zod.object({
+  "id": zod.number(),
+  "username": zod.string(),
+  "displayName": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const SearchUsersResponse = zod.array(SearchUsersResponseItem)
+
+
+/**
+ * @summary Upload an image
+ */
+export const UploadImageBody = zod.object({
+  "image": zod.instanceof(File).optional()
+})
+
+export const UploadImageResponse = zod.object({
+  "url": zod.string().optional(),
+  "width": zod.number().optional(),
+  "height": zod.number().optional()
+})
+
+
+/**
  * @summary Get a user profile by handle
  */
 export const GetUserProfileParams = zod.object({
@@ -124,7 +159,10 @@ export const createPostBodyContentMax = 5000;
 
 export const CreatePostBody = zod.object({
   "content": zod.string().min(1).max(createPostBodyContentMax),
-  "isPermanent": zod.boolean().optional()
+  "isPermanent": zod.boolean().optional(),
+  "imageUrl": zod.string().optional(),
+  "isSensitive": zod.boolean().optional(),
+  "contentWarning": zod.string().optional()
 })
 
 
@@ -144,7 +182,10 @@ export const GetFeedResponse = zod.object({
   "authorDisplayName": zod.string().nullish(),
   "createdAt": zod.string(),
   "expiresAt": zod.string().nullable(),
-  "isPermanent": zod.boolean()
+  "isPermanent": zod.boolean(),
+  "imageUrl": zod.string().nullish(),
+  "isSensitive": zod.boolean().optional(),
+  "contentWarning": zod.string().nullish()
 })),
   "nextCursor": zod.string().nullable()
 })
@@ -166,7 +207,10 @@ export const GetExploreFeedResponse = zod.object({
   "authorDisplayName": zod.string().nullish(),
   "createdAt": zod.string(),
   "expiresAt": zod.string().nullable(),
-  "isPermanent": zod.boolean()
+  "isPermanent": zod.boolean(),
+  "imageUrl": zod.string().nullish(),
+  "isSensitive": zod.boolean().optional(),
+  "contentWarning": zod.string().nullish()
 })),
   "nextCursor": zod.string().nullable()
 })
@@ -186,7 +230,10 @@ export const GetPostResponse = zod.object({
   "authorDisplayName": zod.string().nullish(),
   "createdAt": zod.string(),
   "expiresAt": zod.string().nullable(),
-  "isPermanent": zod.boolean()
+  "isPermanent": zod.boolean(),
+  "imageUrl": zod.string().nullish(),
+  "isSensitive": zod.boolean().optional(),
+  "contentWarning": zod.string().nullish()
 })
 
 
@@ -251,7 +298,10 @@ export const ListUserPostsResponse = zod.object({
   "authorDisplayName": zod.string().nullish(),
   "createdAt": zod.string(),
   "expiresAt": zod.string().nullable(),
-  "isPermanent": zod.boolean()
+  "isPermanent": zod.boolean(),
+  "imageUrl": zod.string().nullish(),
+  "isSensitive": zod.boolean().optional(),
+  "contentWarning": zod.string().nullish()
 })),
   "nextCursor": zod.string().nullable()
 })

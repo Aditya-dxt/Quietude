@@ -16,4 +16,9 @@ export interface Post {
   /** @nullable */
   expiresAt: string | null;
   isPermanent: boolean;
+  /** @nullable */
+  imageUrl?: string | null;
+  isSensitive?: boolean;
+  /** @nullable */
+  contentWarning?: string | null;
 }

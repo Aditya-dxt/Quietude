@@ -1,101 +1,141 @@
-# Quietude
+<div align="center">
 
-**A place for thoughts, not performance.**
+# 🌿 Quietude
 
-Quietude is a privacy-focused social network built as the antithesis of algorithmic feeds. Every feature decision follows one rule: remove anything that creates anxiety, comparison, or performance pressure.
+### *A place for thoughts, not performance.*
 
-## Philosophy
+**A privacy-first social network built as the antithesis of algorithmic feeds.**  
+No likes. No follower counts. No red dots. No anxiety.
 
-What is intentionally **absent** (enforced in code, not just design):
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-quietude--tan.vercel.app-8B7355?style=for-the-badge)](https://quietude-tan.vercel.app)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white)](https://pnpm.io/)
 
-- No like counts, view counts, or follower counts shown anywhere
-- No trending, viral, or engagement scores
-- No notification badges or red dots
-- No algorithmic sorting — pure chronological everywhere
-- No data selling, no ad targeting
+</div>
 
-## Features
+---
 
-### Authentication
+## 🖼️ Preview
 
-- Register, login, and logout with cookie-based sessions (not JWT)
-- Demo accounts: `mira`, `theo`, `esme` (password: `quietude123`)
+> *(Drop a screenshot here — drag a PNG into the file on GitHub)*
 
-### Feed
+![Quietude Preview](attached_assets/preview.png)
 
-- **Home** — chronological feed from people you follow
+---
+
+## 🌐 Live Demo
+
+👉 [quietude-tan.vercel.app](https://quietude-tan.vercel.app)
+
+**Demo accounts** (password: `quietude123`):
+- `mira` · `theo` · `esme`
+
+---
+
+## 🧠 Philosophy
+
+Quietude is engineered around **intentional absence**. Every missing feature is a deliberate decision — not a TODO item. These are enforced in code, not just design:
+
+| What's missing | Why it's missing |
+|---|---|
+| ❌ Like / view / follower counts | Removes social comparison |
+| ❌ Trending or viral scores | Removes engagement pressure |
+| ❌ Notification badges & red dots | Removes anxiety triggers |
+| ❌ Algorithmic sorting | Pure chronological only |
+| ❌ Ad targeting or data selling | Privacy is non-negotiable |
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication
+- Register, login, logout with **cookie-based sessions** (not JWT)
+- Secure `SESSION_SECRET`-signed cookies via `cookie-parser`
+
+### 📰 Feed
+- **Home** — chronological posts from people you follow
 - **Explore** — all public posts, newest first
-- Zero ranking, zero boosting
+- Zero ranking. Zero boosting. Zero manipulation.
 
-### Posts
-
-- Compose with a toggle: fades in 30 days **or** permanent
+### 📝 Posts
+- Compose with a toggle: **fades in 30 days** or **permanent**
 - Non-permanent posts get `expires_at` (30-day TTL)
 - Background job deletes expired posts on startup and every hour
 
-### Replies (threaded)
+### 💬 Replies (Threaded)
+- Chronological threads on each post
+- Full post detail page with replies and a "Leave a thought" composer
+- **No reply counts shown anywhere** — not on cards, not on detail pages
 
-- Chronological threads on each post (`GET` / `POST` `/api/posts/:id/replies`)
-- Post detail page with full post, replies below, and “Leave a thought” composer
-- **No reply counts** anywhere — not on cards, not on the detail page
-
-### Profiles
-
+### 👤 Profiles
 - Display name, bio, and posts
-- Follow / unfollow (counts never shown)
+- Follow / unfollow — counts are **never shown**
 
-### Direct messages
+### 💌 Direct Messages
+- Private conversations between two users
 
-- Private conversations between users
-
-### Settings
-
+### ⚙️ Settings
 - Update display name and bio
 - Danger zone: permanently delete account and all associated data
 
-## Design
+### 🎨 Design
+- Warm paper tones — cream and beige background
+- **Playfair Display** serif + **Inter** for UI
+- Earthy olive and sage palette
+- Generous whitespace, calm empty states
 
-- Warm paper tones (cream/beige background)
-- Playfair Display serif typography with Inter for UI
-- Earthy olive/sage palette
-- Generous whitespace and calm empty states
-- No red dots, no notification badges
+---
 
-## Tech stack
+## 🛠️ Tech Stack
 
-| Layer      | Technology                          |
-| ---------- | ----------------------------------- |
-| Frontend   | React, Vite, Tailwind CSS, Wouter   |
-| Backend    | Node.js, Express 5                  |
-| Database   | PostgreSQL, Drizzle ORM             |
-| Sessions   | HTTP cookies (`cookie-parser`)      |
-| API        | OpenAPI spec + Orval codegen        |
-| Monorepo   | pnpm workspaces                     |
+| Layer | Technology |
+|---|---|
+| **Frontend** | React · Vite · Tailwind CSS · Wouter (routing) |
+| **Backend** | Node.js · Express 5 |
+| **Database** | PostgreSQL · Drizzle ORM |
+| **Sessions** | HTTP cookies (`cookie-parser`) |
+| **API** | OpenAPI spec + Orval codegen |
+| **Monorepo** | pnpm workspaces |
+| **Language** | TypeScript (95.6% of codebase) |
 
-## Project structure
+---
+
+## 📂 Project Structure
 
 ```
-artifacts/
-  quietude/       # React frontend (main app)
-  api-server/     # Express API
-  mockup-sandbox/ # UI preview sandbox (dev)
-lib/
-  db/             # Drizzle schema and migrations
-  api-spec/       # OpenAPI source of truth
-  api-zod/        # Generated Zod validators
-  api-client-react/ # Generated React Query hooks
+Quietude/
+├── artifacts/
+│   ├── quietude/          # React frontend (main app)
+│   ├── api-server/        # Express API server
+│   └── mockup-sandbox/    # UI preview sandbox (dev only)
+├── lib/
+│   ├── db/                # Drizzle schema and migrations
+│   ├── api-spec/          # OpenAPI source of truth (openapi.yaml)
+│   ├── api-zod/           # Generated Zod validators
+│   └── api-client-react/  # Generated React Query hooks
+├── package.json
+├── pnpm-workspace.yaml
+└── tsconfig.base.json
 ```
 
-## Database tables
+---
 
-- `users` — id, username, display_name, bio, created_at
-- `posts` — id, author_id, content, is_permanent, expires_at, created_at
-- `replies` — id, post_id, author_id, content, created_at
-- `follows` — follower_id, following_id
-- `messages` / direct messages
-- `sessions` — cookie session storage
+## 🗄️ Database Schema
 
-## Getting started
+| Table | Key Columns |
+|---|---|
+| `users` | id, username, display_name, bio, created_at |
+| `posts` | id, author_id, content, is_permanent, expires_at, created_at |
+| `replies` | id, post_id, author_id, content, created_at |
+| `follows` | follower_id, following_id |
+| `messages` | id, sender_id, recipient_id, content, created_at |
+| `sessions` | Cookie session storage |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -103,78 +143,96 @@ lib/
 - [pnpm](https://pnpm.io/) 9+
 - PostgreSQL database
 
-### Environment variables
+### Environment Variables
 
-| Variable         | Description                                      |
-| ---------------- | ------------------------------------------------ |
-| `DATABASE_URL`   | PostgreSQL connection string                     |
-| `SESSION_SECRET` | Secret for signing session cookies               |
-| `PORT`           | API server port (e.g. `5000`)                    |
+**Backend (`artifacts/api-server/.env`):**
 
-For the frontend dev server, also set:
+```env
+DATABASE_URL=postgresql://user:password@host:5432/quietude
+SESSION_SECRET=your-long-random-secret
+PORT=5000
+```
 
-| Variable    | Description                          |
-| ----------- | ------------------------------------ |
-| `PORT`      | Vite dev server port (e.g. `5173`)   |
-| `BASE_PATH` | Base URL path (e.g. `/` or `/app/`)  |
+**Frontend (`artifacts/quietude/.env`):**
 
-### Install and run
+```env
+PORT=5173
+BASE_PATH=/
+```
+
+### Install & Run
 
 ```bash
+# Install all workspace dependencies
 pnpm install
 
-# Push schema to your database (development)
+# Push schema to your database
 pnpm --filter @workspace/db run push
 
-# API server
-export DATABASE_URL="postgresql://..."
-export SESSION_SECRET="your-secret"
-export PORT=5000
+# Start API server
 pnpm --filter @workspace/api-server run dev
 
-# Frontend (separate terminal)
-export PORT=5173
-export BASE_PATH=/
+# Start frontend (separate terminal)
 pnpm --filter @workspace/quietude run dev
 ```
 
-### Other commands
+### Other Commands
 
 ```bash
-pnpm run typecheck          # Typecheck entire workspace
-pnpm run build              # Build all packages
-pnpm --filter @workspace/api-spec run codegen   # Regenerate API client from OpenAPI
+# Typecheck entire workspace
+pnpm run typecheck
+
+# Build all packages
+pnpm run build
+
+# Regenerate API client from OpenAPI spec
+pnpm --filter @workspace/api-spec run codegen
 ```
 
-## API overview
+---
 
-All routes are prefixed with `/api`.
+## 📡 API Overview
 
-- **Auth** — register, login, logout, current user
-- **Posts** — create, feed, explore, single post
-- **Replies** — list and create on `/posts/:id/replies`
-- **Users** — profiles, follow/unfollow
-- **Messages** — conversations and DMs
+All routes prefixed with `/api`.
 
-See [`lib/api-spec/openapi.yaml`](lib/api-spec/openapi.yaml) for the full contract.
+| Group | Endpoints |
+|---|---|
+| **Auth** | Register · Login · Logout · Current user |
+| **Posts** | Create · Feed · Explore · Single post |
+| **Replies** | List and create on `/posts/:id/replies` |
+| **Users** | Profiles · Follow · Unfollow |
+| **Messages** | Conversations · DMs |
 
-## Roadmap
+Full contract: [`lib/api-spec/openapi.yaml`](lib/api-spec/openapi.yaml)
 
-Not yet built:
+---
 
-- User search (`/search` — by username/display name, no follower counts in results)
-- Image uploads
-- Export your data (privacy trust feature)
-- Custom domain
+## 🔮 Roadmap
 
-### Planned hosting migration
+- [ ] User search (by username/display name, no counts in results)
+- [ ] Image uploads
+- [ ] Export your data (privacy trust feature)
+- [ ] Custom domain support
 
-| Component  | Target        |
-| ---------- | ------------- |
-| Frontend   | Vercel        |
-| Backend    | Render        |
-| Database   | Railway, Supabase, or MongoDB Atlas |
+### Planned Hosting
 
-## License
+| Component | Target |
+|---|---|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | Railway / Supabase |
 
-MIT
+---
+
+## 📄 License
+
+MIT — open source and free to use.
+
+---
+
+<div align="center">
+  Built for the quiet ones 🌿<br/>
+  by <a href="https://github.com/Aditya-dxt">Aditya Dixit</a>
+  ·
+  <a href="https://quietude-tan.vercel.app">quietude-tan.vercel.app</a>
+</div>

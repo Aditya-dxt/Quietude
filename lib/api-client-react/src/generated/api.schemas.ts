@@ -48,6 +48,7 @@ export interface User {
   /** @nullable */
   bio?: string | null;
   createdAt: string;
+  showReadReceipts?: boolean;
 }
 
 export interface AuthResult {
@@ -72,6 +73,19 @@ export interface ProfileUpdate {
   bio?: string | null;
 }
 
+export interface SettingsUpdate {
+  showReadReceipts?: boolean;
+}
+
+export type PostVisibility = typeof PostVisibility[keyof typeof PostVisibility];
+
+
+export const PostVisibility = {
+  public: 'public',
+  followers: 'followers',
+  private: 'private',
+} as const;
+
 export interface Post {
   id: number;
   content: string;
@@ -87,7 +101,17 @@ export interface Post {
   isSensitive?: boolean;
   /** @nullable */
   contentWarning?: string | null;
+  visibility?: PostVisibility;
 }
+
+export type PostInputVisibility = typeof PostInputVisibility[keyof typeof PostInputVisibility];
+
+
+export const PostInputVisibility = {
+  public: 'public',
+  followers: 'followers',
+  private: 'private',
+} as const;
 
 export interface PostInput {
   /**
@@ -99,6 +123,7 @@ export interface PostInput {
   imageUrl?: string;
   isSensitive?: boolean;
   contentWarning?: string;
+  visibility?: PostInputVisibility;
 }
 
 export interface FeedResult {
@@ -114,6 +139,7 @@ export interface Message {
   toUsername: string;
   createdAt: string;
   isOwn: boolean;
+  readAt?: string;
 }
 
 export interface MessageInput {

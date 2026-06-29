@@ -12,6 +12,7 @@ export const postsTable = pgTable("posts", {
   imageUrl: text("image_url"),
   isSensitive: boolean("is_sensitive").notNull().default(false),
   contentWarning: text("content_warning"),
+  visibility: text("visibility", { enum: ['public', 'followers', 'private'] }).notNull().default('public'),
 });
 
 export const insertPostSchema = createInsertSchema(postsTable).omit({

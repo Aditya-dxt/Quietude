@@ -5,6 +5,7 @@
  * Quietude API - privacy-first social network
  * OpenAPI spec version: 0.1.0
  */
+import type { PostInputVisibility } from './postInputVisibility';
 
 export interface PostInput {
   /**
@@ -16,4 +17,5 @@ export interface PostInput {
   imageUrl?: string;
   isSensitive?: boolean;
   contentWarning?: string;
+  visibility?: PostInputVisibility;
 }

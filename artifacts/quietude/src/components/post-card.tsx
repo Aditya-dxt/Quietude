@@ -2,7 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useState } from "react";
 import type { Post } from "@workspace/api-client-react";
 import { Link } from "wouter";
-import { Trash2 } from "lucide-react";
+import { Trash2, Globe, Users, Lock } from "lucide-react";
 import { useDeletePost, getGetFeedQueryKey, getGetExploreFeedQueryKey, getListUserPostsQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
@@ -59,8 +59,12 @@ export function PostCard({ post, queryToInvalidate }: { post: Post, queryToInval
           </div>
         </Link>
         <div className="flex items-center gap-3">
-          <time className="text-xs text-muted-foreground whitespace-nowrap">
+          <time className="text-xs text-muted-foreground whitespace-nowrap flex items-center gap-1.5">
             {formatDistanceToNow(new Date(post.createdAt))} ago
+            {/* @ts-ignore - visibility might not be fully typed everywhere yet */}
+            {(post as any).visibility === "public" && <Globe size={12} className="opacity-50" />}
+            {(post as any).visibility === "followers" && <Users size={12} className="opacity-50" />}
+            {(post as any).visibility === "private" && <Lock size={12} className="opacity-50" />}
           </time>
           {isOwn && (
             <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={handleDelete}>

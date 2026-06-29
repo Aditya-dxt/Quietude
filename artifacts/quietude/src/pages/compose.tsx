@@ -1,6 +1,6 @@
 import { useCreatePost } from "@workspace/api-client-react";
 import { useState, useRef } from "react";
-import { Image as ImageIcon, X } from "lucide-react";
+import { Image as ImageIcon, X, Globe, Users, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 const postSchema = z.object({
@@ -18,6 +19,7 @@ const postSchema = z.object({
   imageUrl: z.string().optional(),
   isSensitive: z.boolean().default(false),
   contentWarning: z.string().optional(),
+  visibility: z.enum(['public', 'followers', 'private']).default('public'),
 });
 
 export default function Compose() {
@@ -31,6 +33,7 @@ export default function Compose() {
       isPermanent: false,
       isSensitive: false,
       contentWarning: "",
+      visibility: "public",
     },
   });
 
@@ -131,7 +134,46 @@ export default function Compose() {
               </div>
             )}
             
-            <div className="pt-6 border-t border-border/50 mt-auto">
+            <div className="pt-6 border-t border-border/50 mt-auto space-y-4">
+              <FormField
+                control={form.control}
+                name="visibility"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border border-border p-4 bg-card shadow-sm">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base font-medium text-foreground">Visibility</FormLabel>
+                      <div className="text-sm text-muted-foreground">
+                        Who can see this thought?
+                      </div>
+                    </div>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-[140px] shadow-none border-border">
+                          <SelectValue placeholder="Select visibility" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="public">
+                          <div className="flex items-center gap-2">
+                            <Globe size={14} /> Public
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="followers">
+                          <div className="flex items-center gap-2">
+                            <Users size={14} /> Followers
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="private">
+                          <div className="flex items-center gap-2">
+                            <Lock size={14} /> Just me
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="isPermanent"

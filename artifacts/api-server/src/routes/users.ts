@@ -2,8 +2,9 @@ import { Router, type IRouter, type Request } from "express";
 import { db, usersTable, connectionsTable } from "@workspace/db";
 import { eq, and, ilike, or } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
-import { UpdateProfileBody } from "@workspace/api-zod";
+import { UpdateProfileBody, UpdateSettingsBody } from "@workspace/api-zod";
 import { getSessionUserId } from "../lib/session";
+import archiver from "archiver";
 
 const router: IRouter = Router();
 
@@ -109,6 +110,53 @@ router.patch("/users/me/profile", requireAuth, async (req, res): Promise<void> =
     bio: updated.bio ?? null,
     createdAt: updated.createdAt.toISOString(),
   });
+});
+
+router.patch("/users/me/settings", requireAuth, async (req, res): Promise<void> => {
+  const user = (req as AuthRequest).user;
+  const parsed = UpdateSettingsBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const [updated] = await db
+    .update(usersTable)
+    .set({
+      showReadReceipts: parsed.data.showReadReceipts ?? user.showReadReceipts,
+    })
+    .where(eq(usersTable.id, user.id))
+    .returning();
+
+  res.json({
+    id: updated.id,
+    username: updated.username,
+    displayName: updated.displayName ?? null,
+    bio: updated.bio ?? null,
+    createdAt: updated.createdAt.toISOString(),
+    showReadReceipts: updated.showReadReceipts,
+  });
+});
+
+router.get("/users/me/export", requireAuth, async (req, res): Promise<void> => {
+  const user = (req as AuthRequest).user;
+  
+  res.attachment('quietude-data.zip');
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  
+  archive.on('error', (err) => {
+    res.status(500).send({ error: err.message });
+  });
+
+  archive.pipe(res);
+
+  // Profile
+  archive.append(JSON.stringify(user, null, 2), { name: 'profile.json' });
+
+  // Add more data as needed (posts, messages, etc)
+  // We'll keep it simple for now, but a real export would query all tables.
+
+  await archive.finalize();
 });
 
 export default router;

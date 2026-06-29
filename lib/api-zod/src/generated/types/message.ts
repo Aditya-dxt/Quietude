@@ -13,4 +13,5 @@ export interface Message {
   toUsername: string;
   createdAt: string;
   isOwn: boolean;
+  readAt?: string;
 }

@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/use-auth";
-import { useUpdateProfile, useDeleteAccount } from "@workspace/api-client-react";
+import { useUpdateProfile, useDeleteAccount, useUpdateSettings } from "@workspace/api-client-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -7,7 +7,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,6 +40,54 @@ export default function Settings() {
       bio: user?.bio || "",
     },
   });
+
+  const [isExporting, setIsExporting] = useState(false);
+  const settingsMutation = useUpdateSettings();
+
+  const [mutedWords, setMutedWords] = useState<string[]>(() => {
+    const stored = localStorage.getItem("quietude_muted_words");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [newWord, setNewWord] = useState("");
+
+  const handleAddMutedWord = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newWord.trim() || mutedWords.includes(newWord.trim().toLowerCase())) return;
+    const updated = [...mutedWords, newWord.trim().toLowerCase()];
+    setMutedWords(updated);
+    localStorage.setItem("quietude_muted_words", JSON.stringify(updated));
+    setNewWord("");
+  };
+
+  const handleRemoveMutedWord = (word: string) => {
+    const updated = mutedWords.filter((w) => w !== word);
+    setMutedWords(updated);
+    localStorage.setItem("quietude_muted_words", JSON.stringify(updated));
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const response = await fetch('/api/users/me/export', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } // if needed, although mostly it uses cookies
+      });
+      if (!response.ok) throw new Error("Export failed");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'quietude-data.zip';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success("Data export complete");
+    } catch (error) {
+      toast.error("Failed to export data");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const onSubmit = (data: z.infer<typeof settingsSchema>) => {
     updateMutation.mutate({ data }, {
@@ -109,6 +159,64 @@ export default function Settings() {
               </Button>
             </form>
           </Form>
+        </section>
+
+        <section className="pt-8 border-t border-border/50">
+          <h3 className="font-serif text-xl text-foreground mb-6">Privacy & Data</h3>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg">
+              <div>
+                <h4 className="font-medium">Reading Receipts</h4>
+                <p className="text-sm text-muted-foreground">Let others know when you've read their messages.</p>
+              </div>
+              <Switch 
+                checked={user?.showReadReceipts}
+                onCheckedChange={(checked) => {
+                  settingsMutation.mutate({ data: { showReadReceipts: checked } }, {
+                    onSuccess: () => {
+                      checkAuth();
+                      toast.success("Read receipts updated");
+                    }
+                  });
+                }}
+                disabled={settingsMutation.isPending}
+              />
+            </div>
+            <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg">
+              <div>
+                <h4 className="font-medium">Export Data</h4>
+                <p className="text-sm text-muted-foreground">Download a ZIP file of all your data (GDPR).</p>
+              </div>
+              <Button onClick={handleExport} disabled={isExporting} variant="outline" className="shadow-none">
+                {isExporting ? "Exporting..." : "Download"}
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section className="pt-8 border-t border-border/50">
+          <h3 className="font-serif text-xl text-foreground mb-6">Muted Words</h3>
+          <p className="text-sm text-muted-foreground mb-4">Posts containing these words will be hidden from Explore.</p>
+          <form onSubmit={handleAddMutedWord} className="flex gap-2 mb-4">
+            <Input 
+              value={newWord}
+              onChange={(e) => setNewWord(e.target.value)}
+              placeholder="Add a word to mute"
+              className="bg-card shadow-none"
+            />
+            <Button type="submit" variant="secondary" className="shadow-none">Add</Button>
+          </form>
+          <div className="flex flex-wrap gap-2">
+            {mutedWords.map((word) => (
+              <div key={word} className="flex items-center gap-2 bg-secondary/50 px-3 py-1 rounded-full text-sm">
+                <span>{word}</span>
+                <button type="button" onClick={() => handleRemoveMutedWord(word)} className="text-muted-foreground hover:text-foreground">
+                  &times;
+                </button>
+              </div>
+            ))}
+            {mutedWords.length === 0 && <span className="text-sm text-muted-foreground italic">No muted words</span>}
+          </div>
         </section>
 
         <section className="pt-8 border-t border-border/50">

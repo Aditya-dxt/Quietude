@@ -135,6 +135,51 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /users/me/export:
+    get:
+      operationId: exportData
+      tags: [users]
+      summary: Export all user data as ZIP
+      responses:
+        "200":
+          description: ZIP file
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users/me/settings:
+    patch:
+      operationId: updateSettings
+      tags: [users]
+      summary: Update user settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SettingsUpdate"
+      responses:
+        "200":
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /users/search:
     get:
       operationId: searchUsers
@@ -642,6 +687,8 @@ components:
           type: ["string", "null"]
         createdAt:
           type: string
+        showReadReceipts:
+          type: boolean
 
     UserProfile:
       type: object
@@ -668,6 +715,12 @@ components:
         bio:
           type: ["string", "null"]
 
+    SettingsUpdate:
+      type: object
+      properties:
+        showReadReceipts:
+          type: boolean
+
     Post:
       type: object
       required: [id, content, authorUsername, createdAt, expiresAt, isPermanent]
@@ -692,6 +745,9 @@ components:
           type: boolean
         contentWarning:
           type: ["string", "null"]
+        visibility:
+          type: string
+          enum: ["public", "followers", "private"]
 
     PostInput:
       type: object
@@ -709,6 +765,9 @@ components:
           type: boolean
         contentWarning:
           type: string
+        visibility:
+          type: string
+          enum: ["public", "followers", "private"]
 
     FeedResult:
       type: object
@@ -737,6 +796,8 @@ components:
           type: string
         isOwn:
           type: boolean
+        readAt:
+          type: string
 
     MessageInput:
       type: object

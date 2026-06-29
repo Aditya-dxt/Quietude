@@ -48,7 +48,8 @@ export const LoginResponse = zod.object({
   "username": zod.string(),
   "displayName": zod.string().nullish(),
   "bio": zod.string().nullish(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "showReadReceipts": zod.boolean().optional()
 })
 })
 
@@ -69,7 +70,8 @@ export const GetMeResponse = zod.object({
   "username": zod.string(),
   "displayName": zod.string().nullish(),
   "bio": zod.string().nullish(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "showReadReceipts": zod.boolean().optional()
 })
 
 
@@ -78,6 +80,23 @@ export const GetMeResponse = zod.object({
  */
 export const DeleteAccountResponse = zod.object({
   "ok": zod.boolean()
+})
+
+
+/**
+ * @summary Update user settings
+ */
+export const UpdateSettingsBody = zod.object({
+  "showReadReceipts": zod.boolean().optional()
+})
+
+export const UpdateSettingsResponse = zod.object({
+  "id": zod.number(),
+  "username": zod.string(),
+  "displayName": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "showReadReceipts": zod.boolean().optional()
 })
 
 
@@ -97,7 +116,8 @@ export const SearchUsersResponseItem = zod.object({
   "username": zod.string(),
   "displayName": zod.string().nullish(),
   "bio": zod.string().nullish(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "showReadReceipts": zod.boolean().optional()
 })
 export const SearchUsersResponse = zod.array(SearchUsersResponseItem)
 
@@ -146,7 +166,8 @@ export const UpdateProfileResponse = zod.object({
   "username": zod.string(),
   "displayName": zod.string().nullish(),
   "bio": zod.string().nullish(),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "showReadReceipts": zod.boolean().optional()
 })
 
 
@@ -162,7 +183,8 @@ export const CreatePostBody = zod.object({
   "isPermanent": zod.boolean().optional(),
   "imageUrl": zod.string().optional(),
   "isSensitive": zod.boolean().optional(),
-  "contentWarning": zod.string().optional()
+  "contentWarning": zod.string().optional(),
+  "visibility": zod.enum(['public', 'followers', 'private']).optional()
 })
 
 
@@ -185,7 +207,8 @@ export const GetFeedResponse = zod.object({
   "isPermanent": zod.boolean(),
   "imageUrl": zod.string().nullish(),
   "isSensitive": zod.boolean().optional(),
-  "contentWarning": zod.string().nullish()
+  "contentWarning": zod.string().nullish(),
+  "visibility": zod.enum(['public', 'followers', 'private']).optional()
 })),
   "nextCursor": zod.string().nullable()
 })
@@ -210,7 +233,8 @@ export const GetExploreFeedResponse = zod.object({
   "isPermanent": zod.boolean(),
   "imageUrl": zod.string().nullish(),
   "isSensitive": zod.boolean().optional(),
-  "contentWarning": zod.string().nullish()
+  "contentWarning": zod.string().nullish(),
+  "visibility": zod.enum(['public', 'followers', 'private']).optional()
 })),
   "nextCursor": zod.string().nullable()
 })
@@ -233,7 +257,8 @@ export const GetPostResponse = zod.object({
   "isPermanent": zod.boolean(),
   "imageUrl": zod.string().nullish(),
   "isSensitive": zod.boolean().optional(),
-  "contentWarning": zod.string().nullish()
+  "contentWarning": zod.string().nullish(),
+  "visibility": zod.enum(['public', 'followers', 'private']).optional()
 })
 
 
@@ -301,7 +326,8 @@ export const ListUserPostsResponse = zod.object({
   "isPermanent": zod.boolean(),
   "imageUrl": zod.string().nullish(),
   "isSensitive": zod.boolean().optional(),
-  "contentWarning": zod.string().nullish()
+  "contentWarning": zod.string().nullish(),
+  "visibility": zod.enum(['public', 'followers', 'private']).optional()
 })),
   "nextCursor": zod.string().nullable()
 })
@@ -391,7 +417,8 @@ export const ListMessagesResponseItem = zod.object({
   "fromUsername": zod.string(),
   "toUsername": zod.string(),
   "createdAt": zod.string(),
-  "isOwn": zod.boolean()
+  "isOwn": zod.boolean(),
+  "readAt": zod.string().optional()
 })
 export const ListMessagesResponse = zod.array(ListMessagesResponseItem)
 

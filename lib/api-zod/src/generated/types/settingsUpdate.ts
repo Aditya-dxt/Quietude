@@ -6,13 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface User {
-  id: number;
-  username: string;
-  /** @nullable */
-  displayName?: string | null;
-  /** @nullable */
-  bio?: string | null;
-  createdAt: string;
+export interface SettingsUpdate {
   showReadReceipts?: boolean;
 }

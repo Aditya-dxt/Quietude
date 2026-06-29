@@ -5,6 +5,7 @@
  * Quietude API - privacy-first social network
  * OpenAPI spec version: 0.1.0
  */
+import type { PostVisibility } from './postVisibility';
 
 export interface Post {
   id: number;
@@ -21,4 +22,5 @@ export interface Post {
   isSensitive?: boolean;
   /** @nullable */
   contentWarning?: string | null;
+  visibility?: PostVisibility;
 }

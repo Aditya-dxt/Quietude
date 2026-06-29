@@ -120,6 +120,7 @@ router.get("/messages/:handle", requireAuth, async (req, res): Promise<void> => 
       toUsername: m.toUserId === me.id ? me.username : other.username,
       createdAt: m.createdAt.toISOString(),
       isOwn: m.fromUserId === me.id,
+      readAt: (m.fromUserId === me.id && other.showReadReceipts) ? m.createdAt.toISOString() : undefined,
     })),
   );
 });

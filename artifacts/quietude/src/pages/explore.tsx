@@ -1,11 +1,31 @@
 import { useGetExploreFeed, getGetExploreFeedQueryKey } from "@workspace/api-client-react";
 import { PostCard } from "@/components/post-card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function Explore() {
   const [cursor, setCursor] = useState<string | null>(null);
   const { data, isLoading, isError } = useGetExploreFeed({ cursor });
+
+  const mutedWords = useMemo<string[]>(() => {
+    try {
+      const stored = localStorage.getItem("quietude_muted_words");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const filteredPosts = useMemo(() => {
+    if (!data) return [];
+    if (mutedWords.length === 0) return data.posts;
+    return data.posts.filter(post => {
+      const content = post.content.toLowerCase();
+      return !mutedWords.some(word => content.includes(word));
+    });
+  }, [data, mutedWords]);
+
+  const hiddenCount = data ? data.posts.length - filteredPosts.length : 0;
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -35,7 +55,12 @@ export default function Explore() {
         
         {data && data.posts.length > 0 && (
           <div className="flex flex-col">
-            {data.posts.map(post => (
+            {hiddenCount > 0 && (
+              <div className="p-3 text-center text-xs text-muted-foreground/70 bg-secondary/20 border-b border-border/30">
+                {hiddenCount} post{hiddenCount > 1 ? 's' : ''} hidden by your muted words.
+              </div>
+            )}
+            {filteredPosts.map(post => (
               <PostCard key={post.id} post={post} queryToInvalidate={getGetExploreFeedQueryKey()} />
             ))}
             

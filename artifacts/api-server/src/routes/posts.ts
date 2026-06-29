@@ -43,7 +43,7 @@ router.post("/posts", requireAuth, async (req, res): Promise<void> => {
     return;
   }
 
-  const { content, isPermanent, imageUrl, isSensitive, contentWarning } = parsed.data;
+  const { content, isPermanent, imageUrl, isSensitive, contentWarning, visibility } = parsed.data;
   const expiresAt =
     isPermanent
       ? null
@@ -59,6 +59,7 @@ router.post("/posts", requireAuth, async (req, res): Promise<void> => {
       imageUrl: imageUrl ?? null,
       isSensitive: isSensitive ?? false,
       contentWarning: contentWarning ?? null,
+      visibility: visibility ?? 'public',
     })
     .returning();
 
@@ -88,7 +89,11 @@ router.get("/posts/feed", async (req, res): Promise<void> => {
     return;
   }
 
-  const conditions = [inArray(postsTable.authorId, followingIds), notExpired()];
+  const conditions = [
+    inArray(postsTable.authorId, followingIds),
+    notExpired(),
+    or(eq(postsTable.visibility, 'public'), eq(postsTable.visibility, 'followers'))
+  ];
   if (cursor && cursor !== "null") {
     const cursorDate = new Date(cursor);
     conditions.push(lt(postsTable.createdAt, cursorDate));
@@ -116,7 +121,7 @@ router.get("/posts/explore", async (req, res): Promise<void> => {
   const limit = Math.min(Number(req.query.limit) || DEFAULT_LIMIT, 50);
   const cursor = req.query.cursor as string | undefined;
 
-  const conditions = [notExpired()];
+  const conditions = [notExpired(), eq(postsTable.visibility, 'public')];
   if (cursor && cursor !== "null") {
     const cursorDate = new Date(cursor);
     conditions.push(lt(postsTable.createdAt, cursorDate));
@@ -159,6 +164,31 @@ router.get("/posts/user/:handle", async (req, res): Promise<void> => {
   const cursor = req.query.cursor as string | undefined;
 
   const conditions = [eq(postsTable.authorId, author.id), notExpired()];
+  
+  // If not myself, enforce visibility rules
+  const viewerId = await getSessionUserId(req);
+  if (viewerId !== author.id) {
+    if (viewerId) {
+      // Check if following
+      const [conn] = await db
+        .select()
+        .from(connectionsTable)
+        .where(
+          and(
+            eq(connectionsTable.followerId, viewerId),
+            eq(connectionsTable.followingId, author.id),
+          ),
+        );
+      if (conn) {
+        conditions.push(or(eq(postsTable.visibility, 'public'), eq(postsTable.visibility, 'followers')));
+      } else {
+        conditions.push(eq(postsTable.visibility, 'public'));
+      }
+    } else {
+      conditions.push(eq(postsTable.visibility, 'public'));
+    }
+  }
+
   if (cursor && cursor !== "null") {
     conditions.push(lt(postsTable.createdAt, new Date(cursor)));
   }
@@ -188,15 +218,44 @@ router.get("/posts/:id", async (req, res): Promise<void> => {
     return;
   }
 
+  const viewerId = await getSessionUserId(req);
+  const conditions = [eq(postsTable.id, params.data.id), notExpired()];
+
   const [row] = await db
     .select()
     .from(postsTable)
     .innerJoin(usersTable, eq(postsTable.authorId, usersTable.id))
-    .where(and(eq(postsTable.id, params.data.id), notExpired()));
+    .where(and(...conditions));
 
   if (!row) {
     res.status(404).json({ error: "Post not found" });
     return;
+  }
+
+  if (row.posts.authorId !== viewerId && row.posts.visibility !== 'public') {
+    if (row.posts.visibility === 'private') {
+      res.status(403).json({ error: "Private post" });
+      return;
+    }
+    if (row.posts.visibility === 'followers') {
+      if (!viewerId) {
+        res.status(403).json({ error: "Followers only" });
+        return;
+      }
+      const [conn] = await db
+        .select()
+        .from(connectionsTable)
+        .where(
+          and(
+            eq(connectionsTable.followerId, viewerId),
+            eq(connectionsTable.followingId, row.posts.authorId),
+          ),
+        );
+      if (!conn) {
+        res.status(403).json({ error: "Followers only" });
+        return;
+      }
+    }
   }
 
   res.json(serializePost(row.posts, row.users));
